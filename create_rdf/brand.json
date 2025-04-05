@@ -1,0 +1,78 @@
+{
+    "apple": {
+        "country": "United States",
+        "foundDate": "1976-04-01"
+    },
+    "lg": {
+        "country": "South Korea",
+        "foundDate": "1947-10-01"
+    },
+    "xiaomi": {
+        "country": "China",
+        "foundDate": "2010-04-06"
+    },
+    "nokia": {
+        "country": "Finland",
+        "foundDate": "1865-05-12"
+    },
+    "google": {
+        "country": "United States",
+        "foundDate": "1998-09-04"
+    },
+    "huawei": {
+        "country": "China",
+        "foundDate": "1987-09-15"
+    },
+    "samsung": {
+        "country": "South Korea",
+        "foundDate": "1938-03-01"
+    },
+    "nothing": {
+        "country": "United Kingdom",
+        "foundDate": "2020-10-29"
+    },
+    "tecno": {
+        "country": "China",
+        "foundDate": "2006-01-01"
+    },
+    "oppo": {
+        "country": "China",
+        "foundDate": "2001-10-10"
+    },
+    "vivo": {
+        "country": "China",
+        "foundDate": "2009-05-22"
+    },
+    "sony": {
+        "country": "Japan",
+        "foundDate": "1946-05-07"
+    },
+    "zte": {
+        "country": "China",
+        "foundDate": "1985-02-07"
+    },
+    "meizu": {
+        "country": "China",
+        "foundDate": "2003-03-15"
+    },
+    "itel": {
+        "country": "China",
+        "foundDate": "2014-03-01"
+    },
+    "realme": {
+        "country": "China",
+        "foundDate": "2018-05-04"
+    },
+    "infinix": {
+        "country": "China",
+        "foundDate": "2013-01-01"
+    },
+    "honor": {
+        "country": "China",
+        "foundDate": "2013-12-02"
+    },
+    "asus": {
+        "country": "Taiwan",
+        "foundDate": "1989-04-02"
+    }
+}
