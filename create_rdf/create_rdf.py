@@ -56,7 +56,7 @@ for smartphone in json_data:
             brand_uri = get_or_create_shared_uri("brand", brand_name)
             if brand_uri: 
                 g.add((brand_uri, RDF.type, SMP.Brand))
-                g.add((brand_uri, SMP.name, Literal(brand_name, datatype=XSD.string)))
+                g.add((brand_uri, SMP.brandName, Literal(brand_name, datatype=XSD.string)))
                 g.add((brand_uri, SMP.country, Literal(brand_data[brand_name_key]["country"], datatype=XSD.string)))
                 if brand_data[brand_name_key]["foundDate"]:
                     g.add((brand_uri, SMP.foundedDate, Literal(brand_data[brand_name_key]["foundDate"], datatype=XSD.date)))
@@ -87,7 +87,7 @@ for smartphone in json_data:
         os_uri = get_or_create_shared_uri("os", os_name)
         if os_uri:
             g.add((os_uri, RDF.type, SMP.OS))
-            g.add((os_uri, SMP.name, Literal(os_name, datatype=XSD.string)))
+            g.add((os_uri, SMP.osName, Literal(os_name, datatype=XSD.string)))
             g.add((product_uri, SMP.hasOS, os_uri))
 
         # CPU
@@ -95,7 +95,7 @@ for smartphone in json_data:
         chipset_uri = get_or_create_shared_uri("cpu", chipset_name)
         if chipset_uri:
             g.add((chipset_uri, RDF.type, SMP.CPU))
-            g.add((chipset_uri, SMP.name, Literal(chipset_name, datatype=XSD.string)))
+            g.add((chipset_uri, SMP.cpuName, Literal(chipset_name, datatype=XSD.string)))
             chipset_process = smartphone["platform"]["chipset"]["process"]
             if chipset_process:
                 g.add((chipset_uri, SMP.process, Literal(chipset_process, datatype=XSD.string)))
@@ -148,7 +148,7 @@ for smartphone in json_data:
             
             if smartphone[camera_type]["resolution"] and len(smartphone[camera_type]["resolution"]) > 0:
                 resolutions = ", ".join(item for item in smartphone[camera_type]["resolution"] if item)
-                g.add((camera_uri, SMP.resolution, Literal(resolutions, datatype=XSD.string)))
+                g.add((camera_uri, SMP.cameraResolution, Literal(resolutions, datatype=XSD.string)))
             
             g.add((product_uri, SMP.hasCamera, camera_uri))
 
@@ -182,7 +182,7 @@ for smartphone in json_data:
                     if charger["power"]:
                         power = charger["power"].replace("W", "")
                         g.add((charging_uri, SMP.power, Literal(float(power), datatype=XSD.float)))
-                    g.add((product_uri, SMP.hasCharging, charging_uri))
+                    g.add((product_uri, SMP.hasCharger, charging_uri))
     
     # Sensors
     if smartphone["features"]["sensors"]:
