@@ -16,7 +16,7 @@ def convert_csv(data: list[dict]):
         writer.writeheader()  # Ghi dòng tiêu đề
         writer.writerows(data)  # Ghi dữ liệu
 # Load the JSON data from a file
-with open('./phone.json', 'r', encoding='utf-8') as f:
+with open('./phone_model.json', 'r', encoding='utf-8') as f:
     json_data = json.load(f)
 
 with open('./brand.json', 'r', encoding='utf-8') as f:
@@ -104,12 +104,12 @@ for smartphone in json_data:
                 core = smartphone["platform"]["cpu"]
                 g.add((chipset_uri, SMP.core, Literal(core, datatype=XSD.string)))  
 
+            # GPU
+            gpu_name = smartphone["platform"]["gpu"]
+            if gpu_name:
+                g.add((chipset_uri, SMP.gpu, Literal(gpu_name, datatype=XSD.string)))
+            
             g.add((product_uri, SMP.hasCPU, chipset_uri))
-
-        # GPU
-        gpu_name = smartphone["platform"]["gpu"]
-        if gpu_name:
-            g.add((product_uri, SMP.gpu, Literal(gpu_name, datatype=XSD.string)))
      
     # Chong nuoc
     if smartphone["waterproof"]:
@@ -118,9 +118,10 @@ for smartphone in json_data:
     
     # Memory
     if smartphone["memory"]: 
-        g.add((product_uri, SMP.hasCardSlot, Literal(smartphone["memory"]["card_slot"], datatype=XSD.boolean)))
-        storages = ", ".join(f'{item["ram"]} - {item["storage"]}' for item in smartphone["memory"]["internal"])
-        g.add((product_uri, SMP.internalMemory, Literal(storages, datatype=XSD.string)))
+        g.add((product_uri, SMP.cardSlot, Literal(smartphone["memory"]["card_slot"], datatype=XSD.boolean)))
+        if smartphone["memory"]["internal"]:
+            storages = ", ".join(f'{item["ram"]} - {item["storage"]}' for item in smartphone["memory"]["internal"])
+            g.add((product_uri, SMP.internalMemory, Literal(storages, datatype=XSD.string)))
     
     # Camera
     for camera_type in ["selfie_camera", "main_camera"]:
@@ -193,6 +194,10 @@ for smartphone in json_data:
     if smartphone["colors"]:
         colors = ", ".join(item for item in smartphone["colors"])
         g.add((product_uri, SMP.colors, Literal(colors, datatype=XSD.string)))
+
+    # Price
+    if smartphone["price"]:
+        g.add((product_uri, SMP.price, Literal(smartphone["price"], datatype=XSD.int)))
 
 rdf_data = g.serialize(format='xml')
 convert_csv(result)
