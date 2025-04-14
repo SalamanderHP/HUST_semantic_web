@@ -1,11 +1,11 @@
 import json
 import csv
 from rdflib import Graph, Literal, RDF, URIRef, Namespace
-from rdflib.namespace import XSD
+from rdflib.namespace import XSD, OWL
 import re
 from datetime import datetime
 
-SMP = Namespace("http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#")
+SMP = Namespace("http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/")
 
 def get_url(value):
     return re.sub(r'[^\w]', '_', value).lower()
@@ -23,6 +23,7 @@ with open('./brand.json', 'r', encoding='utf-8') as f:
     brand_data = json.load(f)
 
 g = Graph()
+g.parse("smartdevices.rdf", format="xml")  # format có thể là 'xml', 'turtle', 'n3', etc.
 g.bind("smp", SMP)
 
 uri_cache = {}
@@ -45,7 +46,8 @@ for smartphone in json_data:
     g.add((product_uri, RDF.type, SMP.SmartPhone))
     g.add((product_uri, SMP.name, Literal(smartphone["device_name"], datatype=XSD.string)))
     g.add((product_uri, SMP.sim, Literal(smartphone["sim"], datatype=XSD.int)))
-    g.add((product_uri, SMP.weight, Literal(smartphone["body_weight"], datatype=XSD.float)))
+    if smartphone["body_weight"]:
+        g.add((product_uri, SMP.weight, Literal(smartphone["body_weight"], datatype=XSD.float)))
     name = smartphone['device_name']
     result.append({"uri": product_uri, "name": name})
     # Brand
@@ -64,7 +66,7 @@ for smartphone in json_data:
     
     if smartphone["release_date"]:
         release_date = datetime.strptime(smartphone["release_date"], "%d/%m/%Y").strftime("%Y-%m-%d")
-        g.add((product_uri, SMP.releaseDate, Literal(release_date, datatype=XSD.string)))
+        g.add((product_uri, SMP.releaseDate, Literal(release_date, datatype=XSD.dateTime)))
     
     if smartphone["network"]:
         networks = " / ".join(item for item in smartphone["network"])
@@ -76,8 +78,10 @@ for smartphone in json_data:
         g.add((screen_uri, RDF.type, SMP.Screen))
         
         g.add((screen_uri, SMP.size, Literal(smartphone["display"]["size"], datatype=XSD.float)))
-        g.add((screen_uri, SMP.brightness, Literal(smartphone["display"]["brightness"], datatype=XSD.int)))
-        g.add((screen_uri, SMP.refreshRate, Literal(smartphone["display"]["refresh_rate"], datatype=XSD.int)))
+        if smartphone["display"]["brightness"]:
+            g.add((screen_uri, SMP.brightness, Literal(smartphone["display"]["brightness"], datatype=XSD.int)))
+        if smartphone["display"]["refresh_rate"]:
+            g.add((screen_uri, SMP.refreshRate, Literal(smartphone["display"]["refresh_rate"], datatype=XSD.int)))
         g.add((screen_uri, SMP.resolution, Literal(smartphone["display"]["resolution"], datatype=XSD.string)))
         g.add((screen_uri, SMP.type, Literal(smartphone["display"]["type"], datatype=XSD.string)))
     
@@ -118,7 +122,8 @@ for smartphone in json_data:
     
     # Memory
     if smartphone["memory"]: 
-        g.add((product_uri, SMP.cardSlot, Literal(smartphone["memory"]["card_slot"], datatype=XSD.boolean)))
+        if smartphone["memory"]["card_slot"]:
+            g.add((product_uri, SMP.cardSlot, Literal(smartphone["memory"]["card_slot"], datatype=XSD.boolean)))
         if smartphone["memory"]["internal"]:
             storages = ", ".join(f'{item["ram"]} - {item["storage"]}' for item in smartphone["memory"]["internal"])
             g.add((product_uri, SMP.internalMemory, Literal(storages, datatype=XSD.string)))
@@ -153,11 +158,11 @@ for smartphone in json_data:
             g.add((product_uri, SMP.hasCamera, camera_uri))
 
     # Sound
-    if smartphone["sound"]: 
+    if smartphone["sound"] and smartphone["sound"]["3.5mm_jack"]: 
         g.add((product_uri, SMP.jack3_5, Literal(smartphone["sound"]["3.5mm_jack"], datatype=XSD.boolean)))
     
     # Comms
-    if smartphone["comms"]: 
+    if smartphone["comms"] and smartphone["comms"]["nfc"]: 
         g.add((product_uri, SMP.nfc, Literal(smartphone["comms"]["nfc"], datatype=XSD.boolean)))
 
     # Battery
@@ -165,7 +170,8 @@ for smartphone in json_data:
         battery_uri = SMP[product_name_clean + "_battery"]
         g.add((battery_uri, RDF.type, SMP.Battery))
         g.add((battery_uri, SMP.capacity, Literal(smartphone["battery"]["capacity"], datatype=XSD.int)))
-        g.add((battery_uri, SMP.batteryType, Literal(smartphone["battery"]["type"], datatype=XSD.string)))
+        if smartphone["battery"]["type"]:
+            g.add((battery_uri, SMP.batteryType, Literal(smartphone["battery"]["type"], datatype=XSD.string)))
         g.add((product_uri, SMP.hasBattery, battery_uri))
 
         # Charging
@@ -173,7 +179,7 @@ for smartphone in json_data:
             for charger in smartphone["battery"]["charging"]:
                 if charger["type"] in ["wired", "wireless"]:
                     charging_uri = SMP[product_name_clean + "_charging_" + charger["type"]]
-                    if camera_type == "wired":
+                    if charger["type"] == "wired":
                         type = SMP.Wired
                     else:
                         type = SMP.Wireless
@@ -199,9 +205,10 @@ for smartphone in json_data:
     if smartphone["price"]:
         g.add((product_uri, SMP.price, Literal(smartphone["price"], datatype=XSD.int)))
 
-rdf_data = g.serialize(format='xml')
+g.serialize("smartphone.data.rdf", format="xml")
+# rdf_data = g.serialize(format='xml')
 convert_csv(result)
-with open("smartphone.data.rdf", "w") as f:
-    f.write(rdf_data)
+# with open("smartphone.data.rdf", "w") as f:
+#     f.write(rdf_data)
 
 print("RDF data has been successfully generated and saved.")
