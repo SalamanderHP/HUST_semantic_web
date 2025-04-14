@@ -1,13 +1,18 @@
 import json
 import os
 from openai import OpenAI
+from openai.types.batch import Batch
 from dotenv import load_dotenv
+from pathlib import Path
+import asyncio
+
+script_dir = Path(__file__).resolve().parent
+stop_flag = False
+
 load_dotenv()
-
-
 def create_batch_file_from_list_phone():
     try:
-        phone_match_path = "./list_phone.json"
+        phone_match_path = script_dir / "list_phone.json"
         with open(phone_match_path, 'r', encoding='utf-8') as f:
             phones = json.load(f)
         
@@ -122,7 +127,7 @@ def create_batch_file_from_list_phone():
                     continue
                     
         # Lưu file batch
-        batch_file_path = "./openai_batch_requests.jsonl"
+        batch_file_path = script_dir / "openai_batch_requests.jsonl"
         with open(batch_file_path, 'w', encoding='utf-8') as f:
             for request in batch_requests:
                 f.write(json.dumps(request))
@@ -134,11 +139,11 @@ def create_batch_file_from_list_phone():
     except Exception as e:
         print(f"Lỗi: {str(e)}")
 
-def create_batch_request():
+def create_batch_request() -> Batch:
     api_key = os.getenv("OPENAPI_KEY")
     client = OpenAI(api_key=api_key)
     batch_input_file = client.files.create(
-        file=open("openai_batch_requests.jsonl", "rb"),
+        file=open(script_dir / "openai_batch_requests.jsonl", "rb"),
         purpose="batch"
     )
     batch_input_file_id = batch_input_file.id
@@ -151,59 +156,59 @@ def create_batch_request():
         }
     )
 
-    print(batch.id)
+    return batch
 
-def get_batch_result(batch_id: str):
+async def get_batch_result(batch_id: str):
     api_key = os.getenv("OPENAPI_KEY")
     client = OpenAI(api_key=api_key)
+    global stop_flag
+    while not stop_flag:
+        batch_status = client.batches.retrieve(batch_id)
+        if(batch_status.errors != None):
+            print(f"Batch {batch_id} has errors: {batch_status.errors}")
+            stop_flag = True
+            return
+        if batch_status.status == "completed" and batch_status.output_file_id != None:
+            file_response = client.files.content(batch_status.output_file_id)
+            with open(script_dir / "batch_result.json", 'w', encoding='utf-8') as f:
+                f.write(file_response.text)
+            listSave = []
+            listPhones = file_response.text.split("\n")
+            for phone in listPhones:
+                if not phone:
+                    continue
+                result = json.loads(phone)
+                # print(result)
+                phoneStr = result["response"]["body"]["choices"][0]["message"]["content"]
+                phoneModel = json.loads(phoneStr)
+                listSave.append(phoneModel)
+            with open(script_dir / "final_result.json", 'w', encoding='utf-8') as f:
+                f.write(json.dumps(listSave))
 
-    batch_status = client.batches.retrieve(batch_id)
-    if(batch_status.errors != None):
-        print(f"Batch {batch_id} has errors: {batch_status.errors}")
-        return
-    if batch_status.status == "completed" and batch_status.output_file_id != None:
-        file_response = client.files.content(batch_status.output_file_id)
-        with open("batch_result.json", 'w', encoding='utf-8') as f:
-            f.write(file_response.text)
-        listSave = []
-        listPhones = file_response.text.split("\n")
-        for phone in listPhones:
-            if not phone:
-                continue
-            result = json.loads(phone)
-            # print(result)
-            phoneStr = result["response"]["body"]["choices"][0]["message"]["content"]
-            phoneModel = json.loads(phoneStr)
-            listSave.append(phoneModel)
-        with open("final_result.json", 'w', encoding='utf-8') as f:
-            f.write(json.dumps(listSave))
-
-    
-    if batch_status.status == "in_progress":
-        print(f"Batch {batch_id} in_progress.")
-    print(batch_status)
+            merge_json_files()
+            stop_flag = True
+            print(f"Batch {batch_id} success.")
+        
+        if batch_status.status == "in_progress":
+            print(f"Batch {batch_id} in_progress.")
+        await asyncio.sleep(30)
 
 # Ham này để merge thêm giá vào file final_result.json
 # Giá của sản phẩm được lấy từ list_phone.json
 def merge_json_files():
     # Mở final_result và list_phone
-    with open('final_result.json', 'r', encoding='utf-8') as f:
+    with open(script_dir / 'final_result.json', 'r', encoding='utf-8') as f:
         final_result = json.load(f)
     
-    with open('list_phone.json', 'r', encoding='utf-8') as f:
+    with open(script_dir / 'list_phone.json', 'r', encoding='utf-8') as f:
         list_phone = json.load(f)
 
     for phone in final_result:
         for phone2 in list_phone:
             if phone["device_name"] == phone2["gsm"]["name"]:
                 phone["price"] = phone2["price"]
+                phone["description"] = phone2["description"]
                 break
     # Mở file JSON đầu ra
-    with open('phone_model.json', 'w', encoding='utf-8') as f:
+    with open(script_dir / 'phone_model.json', 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
-if __name__ == "__main__":
-    print("Select an option:")
-    # create_batch_file_from_list_phone()
-    # create_batch_request()
-    # get_batch_result("batch_67f38ea41c408190967de0feb7d6077e")
-    merge_json_files()

@@ -4,7 +4,8 @@ services:
     ports:
       - "5678:5678"
     environment:
-      - NODE_FUNCTION_ALLOW_EXTERNAL=string-similarity
+      - NODE_FUNCTION_ALLOW_EXTERNAL=string-similarity,axios
+      - NODE_FUNCTION_ALLOW_BUILTIN=*
     volumes:
       - n8n_data:/home/node/.n8n
 

@@ -1,5 +1,5 @@
 {
-  "name": "Semantic Crawl Data",
+  "name": "My workflow",
   "nodes": [
     {
       "parameters": {
@@ -9,10 +9,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        80,
-        -100
+        -280,
+        120
       ],
-      "id": "076b20a6-8015-4f6d-9fba-f8c7d10aefdf",
+      "id": "040ccde4-a332-42e7-a48c-66757d719338",
       "name": "Webhook",
       "webhookId": "ff8b4542-3d71-4154-82d8-3f7864ea06c2"
     },
@@ -85,10 +85,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        360,
-        -220
+        0,
+        0
       ],
-      "id": "fd143bfa-4a9e-4b47-b795-d705dc8bbd14",
+      "id": "4f2b935f-9dc1-4db2-b7a2-88853c4b1706",
       "name": "HTTP Request"
     },
     {
@@ -99,10 +99,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        540,
-        -220
+        180,
+        0
       ],
-      "id": "24af0195-5ab4-41e1-8c51-3603f3e1bea3",
+      "id": "448e1ee7-bb95-4a9c-9710-a902886251bd",
       "name": "Filter cellphone data"
     },
     {
@@ -113,10 +113,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
-        0
+        80,
+        220
       ],
-      "id": "aa4306d6-0ea9-4671-aa4b-42fb48fd4938",
+      "id": "63c633b7-5d19-4908-8b60-c95f064a0fb7",
       "name": "GSM-quicksearch"
     },
     {
@@ -124,23 +124,23 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        780,
-        -80
+        420,
+        140
       ],
-      "id": "a0f86cf2-2077-4023-8d6f-f63c052666d1",
+      "id": "7444f3fc-bb76-4912-bbae-0b1bbe1e7814",
       "name": "Merge"
     },
     {
       "parameters": {
-        "jsCode": "const difflib = require(\"difflib\");\nlet listPhones = $input.first().json;\nlet gsmSource = $input.last().json;\nlet result = {};\n\nfunction searchPhones(searchQuery, maxResults = 20) {\n    try {\n        const gsmData = gsmSource.result;\n        \n        // Kiểm tra cấu trúc dữ liệu\n        if (!Array.isArray(gsmData) || gsmData.length < 2) {\n            console.error(\"Dữ liệu không đúng định dạng: gsm_source.json phải chứa mảng [makers, devices]\");\n            return [];\n        }\n\n        const makers = gsmData[0];  // Danh sách nhà sản xuất\n        const devices = gsmData[1]; // Danh sách thiết bị\n        \n        // Hằng số chỉ số các trường\n        const MAKER_ID = 0;\n        const PHONE_ID = 1;\n        const PHONE_NAME = 2;\n        const SEARCH_STR = 3;\n        const THUMB = 4;\n        const NAME_OVERRIDE = 5;\n        \n        // Chuẩn hóa từ khóa tìm kiếm\n        const query = searchQuery.toLowerCase().trim();\n        \n        if (query.length === 0) {\n            return [];\n        }\n        \n        // Tách query thành các từ\n        const queryWords = query.split(/\\s+/g);\n        const regexPatterns = [];\n        const strictRegexPatterns = [];\n        \n        // Tạo các mẫu regex để tìm kiếm\n        for (let word of queryWords) {\n            const escapedWord = word.replace(/[/\\-\\\\^$*+?.()|[\\]{}]/g, '\\\\$&');\n            const startsWithWord = escapedWord.match(/^\\w/);\n            const endsWithWord = escapedWord.match(/\\w$/);\n            \n            regexPatterns.push(new RegExp((startsWithWord ? '\\\\b' : '') + escapedWord));\n            strictRegexPatterns.push(new RegExp((startsWithWord ? '\\\\b' : '') + escapedWord + (endsWithWord ? '\\\\b' : '')));\n        }\n        \n        // Hàm kiểm tra xem tất cả các mẫu regex có khớp với chuỗi không\n        function matchesAllPatterns(str, patterns) {\n            for (let pattern of patterns) {\n                if (!str.match(pattern)) {\n                    return false;\n                }\n            }\n            return true;\n        }\n        \n        // Hàm tạo tên đầy đủ của điện thoại\n        function makePhoneName(device, useOriginalName = false) {\n            const brand = makers[device[MAKER_ID]];\n            const name = (device[NAME_OVERRIDE] !== undefined && !useOriginalName)\n                ? device[NAME_OVERRIDE] || device[PHONE_NAME]\n                : device[PHONE_NAME];\n            return `${brand} ${name}`;\n        }\n        \n        // Tạo chuỗi tìm kiếm\n        function makeSearchString(device) {\n            const brand = makers[device[MAKER_ID]];\n            const searchStr = `${brand} ${device[SEARCH_STR]}`;\n            return searchStr.toLowerCase();\n        }\n        \n        // Tìm kết quả chính xác\n        const results = [];\n        \n        // Kiểm tra nếu có kết quả chính xác\n        const exactMatchIndex = devices.findIndex(device => {\n            const fullName = makePhoneName(device).toLowerCase();\n            return fullName === query;\n        });\n        \n        if (exactMatchIndex !== -1) {\n            const exactMatch = devices[exactMatchIndex];\n            results.push({\n                id: exactMatch[PHONE_ID],\n                name: makePhoneName(exactMatch),\n                brand: makers[exactMatch[MAKER_ID]],\n                thumb: exactMatch[THUMB],\n                exact: true\n            });\n        }\n        \n        // Tìm các kết quả khớp một phần\n        for (let device of devices) {\n            // Bỏ qua nếu đã tìm thấy chính xác\n            if (exactMatchIndex !== -1 && device === devices[exactMatchIndex]) {\n                continue;\n            }\n            \n            const phoneName = makePhoneName(device).toLowerCase();\n            const searchString = makeSearchString(device);\n            \n            // Kiểm tra nếu tên thiết bị khớp với tất cả các từ trong query\n            if (matchesAllPatterns(phoneName, regexPatterns) || \n                (searchString && matchesAllPatterns(searchString, strictRegexPatterns))) {\n                \n                results.push({\n                    id: device[PHONE_ID],\n                    name: makePhoneName(device),\n                    brand: makers[device[MAKER_ID]],\n                    thumb: device[THUMB]\n                });\n            }\n            \n            // Dừng nếu đã đủ số lượng kết quả\n            if (results.length >= maxResults) {\n                break;\n            }\n        }\n        \n        return results;\n        \n    } catch (error) {\n        console.error(`Lỗi khi tìm kiếm thiết bị: ${error.message}`);\n        return [];\n    }\n}\nlet phoneMapped = [];\nlet phoneNotFound = [];\nfor (const phoneName of Object.keys(listPhones)) {\n  let foundedPhone = searchPhones(phoneName, 1);\n    if(foundedPhone.length > 0) {\n        phoneMapped.push({\n          name: phoneName,\n          ...listPhones[phoneName],\n          \"gsm\": foundedPhone[0]\n        });\n    } else {\n      phoneNotFound.push(phoneName);\n    }\n}\nlet listNotfound2 = [];\n\nfor(const phone of phoneNotFound) {\n  const foundedPhone = searchPhones(phone.replace(/\\b4G\\b/gi, '').replace(/\\b5G\\b/gi, '').replace(\" Plus\", \"+\"), 1);\n  if(foundedPhone.length > 0) {\n        phoneMapped.push({\n          name: phone,\n          ...listPhones[phone],\n          \"gsm\": foundedPhone[0]\n        });\n  } else {\n    listNotfound2.push(phone)\n  }\n}\n\nconsole.log(gsmSource);\nreturn {phoneMapped, phoneNotFound, listNotfound2};"
+        "jsCode": "const stringSimilarity = require(\"string-similarity\");\nlet listPhones = $input.first().json;\nlet gsmSource = $input.last().json;\nclass PhoneCompare {\n    normalizeBrand(t) {\n        t = t.toLowerCase();\n        if (t.startsWith(\"iphone\") || t.startsWith(\"apple\")) return \"apple\";\n        if (t.startsWith(\"samsung\")) return \"samsung\";\n        if ([\"xiaomi\", \"redmi\", \"poco\"].some(p => t.startsWith(p))) return \"xiaomi\";\n        if (t.startsWith(\"meizu\")) return \"meizu\";\n        if (t.startsWith(\"oppo\")) return \"oppo\";\n        if (t.startsWith(\"oneplus\")) return \"oneplus\";\n        if (t.startsWith(\"realme\")) return \"realme\";\n        if (t.startsWith(\"vivo\")) return \"vivo\";\n        if (t.startsWith(\"asus\")) return \"asus\";\n        if (t.startsWith(\"huawei\")) return \"huawei\";\n        if (t.startsWith(\"honor\")) return \"honor\";\n        if (t.startsWith(\"zte\") || t.startsWith(\"nubia\")) return \"zte\";\n        if (t.startsWith(\"sony\")) return \"sony\";\n        if (t.startsWith(\"nothing\")) return \"nothing\";\n        if (t.startsWith(\"nokia\")) return \"nokia\";\n        if (t.startsWith(\"cat\")) return \"cat\";\n        if (t.startsWith(\"tecno\")) return \"tecno\";\n        if (t.startsWith(\"infinix\")) return \"infinix\";\n        if (t.startsWith(\"itel\")) return \"itel\";\n        return t.split(\" \")[0] || t;\n    }\n\n    // So sánh độ tương đồng\n    similarity(a, b) {\n        return stringSimilarity.compareTwoStrings(a, b);\n    }\n\n    extractBrand(modelName) {\n        const tokens = modelName.split(\" \");\n        if (!tokens.length) return \"\";\n        return this.normalizeBrand(tokens[0]);\n    }\n\n    cleanModel(m) {\n        m = m.toLowerCase();\n        const brand = this.extractBrand(m);\n        if (m.startsWith(brand)) {\n          m = m.slice(brand.length).trim();\n        }\n      \n        m = m.replace(/\\(.*?\\)/g, \"\"); // remove parentheses\n        m = m.replace(/\\+/g, \"\"); // remove \"+\"\n        m = m.replace(/\\s+/g, \" \").trim(); // clean extra spaces\n        return m;\n    }\n\n    compareName(phone1, phone2) {\n        const brand1 = this.extractBrand(phone1);\n        const brand2 = this.extractBrand(phone2);\n\n        if (brand1 !== brand2) {\n            return false;\n        }\n\n        const model1 = this.cleanModel(phone1);\n        const model2 = this.cleanModel(phone2);\n\n        const similarityScore = this.similarity(model1, model2);\n        return similarityScore;\n    }\n    \n    findMostSimilar(deviceName, list) {\n        let bestMatch = null;\n        let highestScore = -1;\n      \n        list.forEach(item => {\n            let name = deviceName.toLowerCase().trim();\n            const gsmName = item.name.toLowerCase().trim();\n            const score = this.compareName(name, gsmName);\n      \n            if (score > highestScore && score >= 0.7) {\n                highestScore = score;\n                bestMatch = { ...item, similarity: score };\n            }\n        });\n        return bestMatch;\n    }\n}\n\nfunction searchPhones(searchQuery, maxResults = 20) {\n    try {\n        const gsmData = gsmSource.result;\n        \n        // Kiểm tra cấu trúc dữ liệu\n        if (!Array.isArray(gsmData) || gsmData.length < 2) {\n            console.error(\"Dữ liệu không đúng định dạng: gsm_source.json phải chứa mảng [makers, devices]\");\n            return [];\n        }\n\n        const makers = gsmData[0];  // Danh sách nhà sản xuất\n        const devices = gsmData[1]; // Danh sách thiết bị\n        \n        // Hằng số chỉ số các trường\n        const MAKER_ID = 0;\n        const PHONE_ID = 1;\n        const PHONE_NAME = 2;\n        const SEARCH_STR = 3;\n        const THUMB = 4;\n        const NAME_OVERRIDE = 5;\n        \n        // Chuẩn hóa từ khóa tìm kiếm\n        const query = searchQuery.toLowerCase().trim();\n        \n        if (query.length === 0) {\n            return [];\n        }\n        \n        // Tách query thành các từ\n        const queryWords = query.split(/\\s+/g);\n        const regexPatterns = [];\n        const strictRegexPatterns = [];\n        \n        // Tạo các mẫu regex để tìm kiếm\n        for (let word of queryWords) {\n            const escapedWord = word.replace(/[/\\-\\\\^$*+?.()|[\\]{}]/g, '\\\\$&');\n            const startsWithWord = escapedWord.match(/^\\w/);\n            const endsWithWord = escapedWord.match(/\\w$/);\n            \n            regexPatterns.push(new RegExp((startsWithWord ? '\\\\b' : '') + escapedWord));\n            strictRegexPatterns.push(new RegExp((startsWithWord ? '\\\\b' : '') + escapedWord + (endsWithWord ? '\\\\b' : '')));\n        }\n        \n        // Hàm kiểm tra xem tất cả các mẫu regex có khớp với chuỗi không\n        function matchesAllPatterns(str, patterns) {\n            for (let pattern of patterns) {\n                if (!str.match(pattern)) {\n                    return false;\n                }\n            }\n            return true;\n        }\n        \n        // Hàm tạo tên đầy đủ của điện thoại\n        function makePhoneName(device, useOriginalName = false) {\n            const brand = makers[device[MAKER_ID]];\n            const name = (device[NAME_OVERRIDE] !== undefined && !useOriginalName)\n                ? device[NAME_OVERRIDE] || device[PHONE_NAME]\n                : device[PHONE_NAME];\n            return `${brand} ${name}`;\n        }\n        \n        // Tạo chuỗi tìm kiếm\n        function makeSearchString(device) {\n            const brand = makers[device[MAKER_ID]];\n            const searchStr = `${brand} ${device[SEARCH_STR]}`;\n            return searchStr.toLowerCase();\n        }\n        \n        // Tìm kết quả chính xác\n        const results = [];\n        \n        // Kiểm tra nếu có kết quả chính xác\n        const exactMatchIndex = devices.findIndex(device => {\n            const fullName = makePhoneName(device).toLowerCase();\n            return fullName === query;\n        });\n        \n        if (exactMatchIndex !== -1) {\n            const exactMatch = devices[exactMatchIndex];\n            results.push({\n                id: exactMatch[PHONE_ID],\n                name: makePhoneName(exactMatch),\n                brand: makers[exactMatch[MAKER_ID]],\n                thumb: exactMatch[THUMB],\n                exact: true\n            });\n        }\n        \n        // Tìm các kết quả khớp một phần\n        for (let device of devices) {\n            // Bỏ qua nếu đã tìm thấy chính xác\n            if (exactMatchIndex !== -1 && device === devices[exactMatchIndex]) {\n                continue;\n            }\n            \n            const phoneName = makePhoneName(device).toLowerCase();\n            const searchString = makeSearchString(device);\n            \n            // Kiểm tra nếu tên thiết bị khớp với tất cả các từ trong query\n            if (matchesAllPatterns(phoneName, regexPatterns) || \n                (searchString && matchesAllPatterns(searchString, strictRegexPatterns))) {\n                \n                results.push({\n                    id: device[PHONE_ID],\n                    name: makePhoneName(device),\n                    brand: makers[device[MAKER_ID]],\n                    thumb: device[THUMB]\n                });\n            }\n            \n            // Dừng nếu đã đủ số lượng kết quả\n            if (results.length >= maxResults) {\n                break;\n            }\n        }\n        \n        return results;\n        \n    } catch (error) {\n        console.error(`Lỗi khi tìm kiếm thiết bị: ${error.message}`);\n        return [];\n    }\n}\nlet phoneMapped = [];\nlet phoneNotFound = [];\nlet comparer = new PhoneCompare();\n\nfor (const phoneName of Object.keys(listPhones)) {\n  let foundedPhone = searchPhones(phoneName, 3);\n    if(foundedPhone.length > 0) {\n        let bestMatch = comparer.findMostSimilar(phoneName, foundedPhone);\n        if(bestMatch) {\n            phoneMapped.push({\n                name: phoneName,\n                ...listPhones[phoneName],\n                \"gsm\": bestMatch\n            });\n        } else {\n            phoneNotFound.push(phoneName);\n        }\n    } else {\n      phoneNotFound.push(phoneName);\n    }\n}\n\nlet listNotfound2 = [];\n\nfor(const phone of phoneNotFound) {\n    let cleanedName = phone.replace(/\\b4G\\b/gi, '').replace(/\\b5G\\b/gi, '').replace(\" Plus\", \"+\");\n  const foundedPhone = searchPhones(cleanedName, 3);\n  if(foundedPhone.length > 0) {\n        let bestMatch = comparer.findMostSimilar(cleanedName, foundedPhone);\n        if(bestMatch) {\n            phoneMapped.push({\n                name: phone,\n                ...listPhones[phone],\n                \"gsm\": bestMatch\n            });\n        } else {\n            listNotfound2.push(phone);\n        }\n  } else {\n    listNotfound2.push(phone)\n  }\n}\n\nconsole.log(gsmSource);\nreturn {phoneMapped, phoneNotFound, listNotfound2};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        -80
+        600,
+        140
       ],
-      "id": "71aeb03c-e9c8-41bf-ab24-46f5f29b607b",
+      "id": "aec03245-d65e-4ff1-87bd-b1b1f5a753fb",
       "name": "Merge cellphone & gsm"
     },
     {
@@ -150,25 +150,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1180,
-        -80
+        820,
+        140
       ],
-      "id": "0c652312-fe5e-4b4e-a9d2-5dea84323ed3",
+      "id": "4bf5d079-0c5c-456b-9446-5255ae08cfb2",
       "name": "Create data for get model detail"
-    },
-    {
-      "parameters": {
-        "language": "python",
-        "pythonCode": "data = _input.all()\nimport json\nimport re\nfrom difflib import SequenceMatcher\nimport re\n\ndef normalize_brand(t):\n    t = t.lower()\n    # brand synonyms\n    if t.startswith(\"iphone\"):\n        return \"apple\"\n    if t.startswith(\"apple\"):\n        return \"apple\"\n    if t.startswith(\"samsung\"):\n        return \"samsung\"\n    if t.startswith(\"xiaomi\"):\n        return \"xiaomi\"\n    if t.startswith(\"redmi\"):\n        return \"xiaomi\"\n    if t.startswith(\"poco\"):\n        return \"xiaomi\"\n    if t.startswith(\"meizu\"):\n        return \"meizu\"\n    if t.startswith(\"oppo\"):\n        return \"oppo\"\n    if t.startswith(\"oneplus\"):\n        return \"oneplus\"\n    if t.startswith(\"realme\"):\n        return \"realme\"\n    if t.startswith(\"vivo\"):\n        return \"vivo\"\n    if t.startswith(\"asus\"):\n        return \"asus\"\n    if t.startswith(\"huawei\"):\n        return \"huawei\"\n    if t.startswith(\"honor\"):\n        return \"honor\"\n    if t.startswith(\"zte\"):\n        return \"zte\"\n    if t.startswith(\"nubia\"):\n        return \"zte\"\n    if t.startswith(\"sony\"):\n        return \"sony\"\n    if t.startswith(\"nothing\"):\n        return \"nothing\"\n    if t.startswith(\"nokia\"):\n        return \"nokia\"\n    if t.startswith(\"cat\"):\n        return \"cat\"\n    if t.startswith(\"tecno\"):\n        return \"tecno\"\n    if t.startswith(\"infinix\"):\n        return \"infinix\"\n    if t.startswith(\"itel\"):\n        return \"itel\"\n    # etc. fallback:\n    return t.split()[0] if t else t\n\ndef extract_brand(model_name):\n    # We'll take first 2 tokens in case 1 word is \"apple iphone\" => brand is apple\n    # We'll parse brand from the first or second word if \"iPhone\" is first word => apple\n    # We'll do a simpler approach:\n    tokens = model_name.split()\n    if not tokens:\n        return \"\"\n    # check up to first 2 tokens for brand\n    first = normalize_brand(tokens[0])\n    if len(tokens) > 1:\n        # check if brand can be recognized by second token if first is 'apple'\n        # but in general let's keep it simple\n        pass\n    return first\n\ndef clean_model(m):\n    # remove brand from string, remove \"plus\" \"ultra\" \"5g\" \"4g\" etc from end maybe\n    # let's do a simpler approach: remove brand words from start, remove common extras, keep main\n    # We'll do a sequence match after these normalizations\n    m = m.lower()\n    # remove brand name from start\n    brand = extract_brand(m)\n    brand_words = brand.split()\n    for bw in brand_words:\n        if m.startswith(bw):\n            m = m[len(bw):].strip()\n    # remove common descriptors\n    # We'll remove \"5g\", \"4g\", \"plus\", \"pro\", \"ultra\" if they appear at the end or so\n    # but let's do it systematically with a set\n    # We'll remove them from anywhere for simpler approach\n    # Actually let's keep them? It's complicated. We'll keep them but let's remove parentheses stuff\n    m = re.sub(r\"\\(.*?\\)\", \"\", m)\n    m = m.replace(\"+\", \"\")\n    # remove repeated spaces\n    m = re.sub(r\"\\s+\", \" \", m).strip()\n    return m\n\ndef similarity(a, b):\n    return SequenceMatcher(None, a, b).ratio()\n\ninvalidResult = []\nvalidResults = []\nfor row in data:\n    row = row.json\n    name = row[\"name\"]\n    gsm_name = row[\"gsm_name\"]\n    brand1 = extract_brand(name)\n    brand2 = extract_brand(gsm_name)\n    \n    # Check brand\n    if brand1 != brand2:\n        # brand mismatch => false\n        invalidResult.append(row)\n        continue\n    \n    # brand match => do fuzzy model match\n    c1 = clean_model(name)\n    c2 = clean_model(gsm_name)\n    sim = similarity(c1, c2)\n    \n    # We'll set a threshold 0.66\n    if(sim >= 0.66):\n      validResults.append(row)\n    else:\n      invalidResult.append(row)\n      \nreturn validResults"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1400,
-        -80
-      ],
-      "id": "58ac1046-816d-4488-81c1-393a34cce228",
-      "name": "Validate merge result"
     },
     {
       "parameters": {
@@ -178,10 +164,10 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        660,
-        300
+        300,
+        520
       ],
-      "id": "b88c6b9a-4efa-43b4-9982-6a2aad797455",
+      "id": "49ba672c-48ec-4a2b-8d31-e733af816d96",
       "name": "Split Out"
     },
     {
@@ -202,11 +188,24 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        900,
-        280
+        540,
+        500
       ],
-      "id": "dd792e6f-dce8-445d-8272-1d723a4c7893",
+      "id": "ebeca892-1794-4638-a8d5-f7dcf8298605",
       "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "let axios = require(\"axios\")\nlet data = $input.all().map((phone) => phone.json)\nconsole.log(data)\n\naxios.post(\"http://host.docker.internal:8000/crawl_data\", data)\nreturn {};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        500
+      ],
+      "id": "892b11a8-3a16-4982-ac38-21021c3a9499",
+      "name": "Trigger crawl & extract data"
     }
   ],
   "pinData": {},
@@ -291,17 +290,6 @@
       "main": [
         [
           {
-            "node": "Validate merge result",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Validate merge result": {
-      "main": [
-        [
-          {
             "node": "Merge1",
             "type": "main",
             "index": 0
@@ -319,17 +307,27 @@
           }
         ]
       ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Trigger crawl & extract data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "379098d0-925a-4e34-9061-e955c27abbc2",
+  "versionId": "1679a922-7733-4e42-a1b9-7301861c67e9",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "778476d532697751173553e53aee6c33d08bc834db3fb97a6b6ba720dc2150d3"
+    "instanceId": "515928a3cedeb4b11e8eb24bba62e924875f0109a01577fe316934a7868b7611"
   },
-  "id": "l8BUncikCh5KvIWw",
+  "id": "YBWNS23WCBJA1oKd",
   "tags": []
 }

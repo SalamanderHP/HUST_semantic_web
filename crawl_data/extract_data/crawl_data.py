@@ -7,6 +7,9 @@ import concurrent.futures
 import random
 from pathlib import Path
 
+# Directory chứa script hiện tại
+script_dir = Path(__file__).resolve().parent
+
 # Định nghĩa headers để tránh bị chặn
 headers = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -118,7 +121,7 @@ def process_phone(phone_index, phone, all_phones):
 def save_json_file(phones, json_file_path, batch_id):
     try:
         # Tạo bản sao lưu
-        backup_path = f"gsm_cache/{json_file_path}.backup_{batch_id}"
+        backup_path = script_dir / f"gsm_cache/list_phone.backup_{batch_id}"
         with open(backup_path, "w", encoding="utf-8") as f:
             json.dump(phones, f, ensure_ascii=False, indent=2)
         print(f"Đã sao lưu file JSON: {backup_path}")
@@ -133,10 +136,10 @@ def save_json_file(phones, json_file_path, batch_id):
         return False
 
 # Hàm chính
-def main():
+def excute():
     try:
         # Đọc file phone_match.json
-        json_file_path = "./list_phone.json"
+        json_file_path = script_dir / "list_phone.json"
         
         with open(json_file_path, "r", encoding="utf-8") as f:
             phones = json.load(f)
@@ -172,11 +175,8 @@ def main():
             
             # Lưu sau mỗi batch
             save_json_file(phones, json_file_path, current_batch)
-        
+            break
         print(f"\nHoàn thành tất cả các batch.")
     
     except Exception as e:
         print(f"Lỗi trong quá trình xử lý: {str(e)}")
-
-if __name__ == "__main__":
-    main()
