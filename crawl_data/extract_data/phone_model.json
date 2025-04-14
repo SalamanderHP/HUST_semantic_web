@@ -944,7 +944,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "1179 x 2556",
             "ratio": "19.5:9",
@@ -1091,7 +1091,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "1170 x 2532",
             "ratio": "19.5:9",
@@ -1551,7 +1551,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "1170 x 2532",
             "ratio": "19.5:9",
@@ -1987,7 +1987,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "1170 x 2532",
             "ratio": "19.5:9",
@@ -2582,7 +2582,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "1179 x 2556",
             "ratio": "19.5:9",
@@ -2864,7 +2864,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.7,
             "resolution": "1290 x 2796",
             "ratio": "19.5:9",
@@ -3306,7 +3306,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.7,
             "resolution": "1290 x 2796",
             "ratio": "19.5:9",
@@ -4179,7 +4179,7 @@
         "sim": 2,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "828 x 1792",
             "ratio": "19.5:9",
@@ -5163,7 +5163,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.7,
             "resolution": "1284 x 2778",
             "ratio": "19.5:9",
@@ -12090,7 +12090,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.4,
             "resolution": "1080 x 2340",
             "ratio": "19.5:9",
@@ -12817,7 +12817,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.7,
             "resolution": "1284 x 2778",
             "ratio": "19.5:9",
@@ -13233,7 +13233,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.4,
             "resolution": "1080 x 2340",
             "ratio": "19.5:9",
@@ -16495,7 +16495,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "1170 x 2532",
             "ratio": "19.5:9",
@@ -21871,7 +21871,7 @@
         "sim": 1,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.5,
             "resolution": "1080 x 1920",
             "ratio": "16:9",
@@ -26712,7 +26712,7 @@
         "sim": 2,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.1,
             "resolution": "828 x 1792",
             "ratio": "19.5:9",
@@ -30115,7 +30115,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.5,
             "resolution": "1242 x 2688",
             "ratio": "19.5:9",
@@ -37040,7 +37040,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.8,
             "resolution": "1125 x 2436",
             "ratio": "19.5:9",
@@ -37970,7 +37970,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 6.5,
             "resolution": "1242 x 2688",
             "ratio": "19.5:9",
@@ -38987,7 +38987,7 @@
         "sim": 1,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 4.7,
             "resolution": "750 x 1334",
             "ratio": "16:9",
@@ -43080,7 +43080,7 @@
         "sim": 1,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.5,
             "resolution": "1080 x 1920",
             "ratio": "16:9",
@@ -49047,7 +49047,7 @@
         "sim": 1,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 4.0,
             "resolution": "640 x 1136",
             "ratio": "16:9",
@@ -58473,7 +58473,7 @@
         "sim": 1,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.8,
             "resolution": "1125 x 2436",
             "ratio": "19.5:9",
@@ -58610,7 +58610,7 @@
         "sim": 1,
         "display": {
             "type": "LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 4.7,
             "resolution": "750 x 1334",
             "ratio": "16:9",
@@ -58751,7 +58751,7 @@
         "sim": 2,
         "display": {
             "type": "OLED",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 5.8,
             "resolution": "1125 x 2436",
             "ratio": "19.5:9",
@@ -67435,7 +67435,7 @@
         "sim": 1,
         "display": {
             "type": "IPS LCD",
-            "refresh_rate": null,
+            "refresh_rate": 60,
             "size": 4.7,
             "resolution": "750 x 1334",
             "ratio": "16:9",
