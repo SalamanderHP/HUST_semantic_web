@@ -61,7 +61,7 @@ for smartphone in json_data:
                 g.add((brand_uri, SMP.brandName, Literal(brand_name, datatype=XSD.string)))
                 g.add((brand_uri, SMP.country, Literal(brand_data[brand_name_key]["country"], datatype=XSD.string)))
                 if brand_data[brand_name_key]["foundDate"]:
-                    g.add((brand_uri, SMP.foundedDate, Literal(brand_data[brand_name_key]["foundDate"], datatype=XSD.date)))
+                    g.add((brand_uri, SMP.foundedDate, Literal(brand_data[brand_name_key]["foundDate"], datatype=XSD.dateTime)))
                 g.add((product_uri, SMP.hasBrand, brand_uri))
     
     if smartphone["release_date"]:
