@@ -175,7 +175,6 @@ def excute():
             
             # Lưu sau mỗi batch
             save_json_file(phones, json_file_path, current_batch)
-            break
         print(f"\nHoàn thành tất cả các batch.")
     
     except Exception as e:
