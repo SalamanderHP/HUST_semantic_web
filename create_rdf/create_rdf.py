@@ -10,6 +10,11 @@ SMP = Namespace("http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices
 def get_url(value):
     return re.sub(r'[^\w]', '_', value).lower()
 
+def remove_html_tags(text):
+    """Remove html tags from a string"""
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
+
 def convert_csv(data: list[dict]):
     with open("smartphone.csv", mode="w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=["uri", "name"], quotechar='"', quoting=csv.QUOTE_ALL)
@@ -48,6 +53,9 @@ for smartphone in json_data:
     g.add((product_uri, SMP.sim, Literal(smartphone["sim"], datatype=XSD.int)))
     if smartphone["body_weight"]:
         g.add((product_uri, SMP.weight, Literal(smartphone["body_weight"], datatype=XSD.float)))
+    if smartphone["description"]:
+        description = remove_html_tags(smartphone["description"])
+        g.add((product_uri, SMP.description, Literal(description, datatype=XSD.string)))
     name = smartphone['device_name']
     result.append({"uri": product_uri, "name": name})
     # Brand
@@ -148,7 +156,7 @@ for smartphone in json_data:
                 g.add((camera_uri, SMP.features, Literal(features, datatype=XSD.string)))
 
             if smartphone[camera_type]["video"]:
-                video = ", ".join(item for item in smartphone[camera_type]["video"])
+                video = ", ".join(item for item in smartphone[camera_type]["video"] if item != None)
                 g.add((camera_uri, SMP.video, Literal(video, datatype=XSD.string)))
             
             if smartphone[camera_type]["resolution"] and len(smartphone[camera_type]["resolution"]) > 0:
@@ -197,7 +205,7 @@ for smartphone in json_data:
             g.add((product_uri, SMP.sensors, Literal(sensors, datatype=XSD.string)))
 
     # Colors
-    if smartphone["colors"]:
+    if "colors" in smartphone:
         colors = ", ".join(item for item in smartphone["colors"])
         g.add((product_uri, SMP.colors, Literal(colors, datatype=XSD.string)))
 
