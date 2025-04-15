@@ -1,0 +1,43 @@
+body {
+    background-color: #f8f9fa;
+}
+
+#messages {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#messages p {
+    margin-bottom: 0.5rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+#messages strong {
+    font-weight: 600;
+}
+
+#messages i {
+    color: #6c757d;
+}
+
+.input-group {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+/* Style for code blocks or pre-formatted text */
+#messages pre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 5px 0;
+}
+
+/* Style for line breaks */
+#messages br {
+    display: block;
+    content: "";
+    margin-top: 5px;
+}
