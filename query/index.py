@@ -41,10 +41,10 @@ All queries MUST include 'ORDER BY DESC(?releaseDate)' before the LIMIT clause t
 The query MUST include LIMIT 5 at the end to return at most 5 smartphone results.
 
 Use PREFIX: 
-PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
 
 Example 1: Find all phones of a brand named "Apple"
-PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
 SELECT DISTINCT ?name
 WHERE {{
     ?smartphone onto:name ?name ;
@@ -56,7 +56,7 @@ ORDER BY DESC(?releaseDate)
 LIMIT 5
 
 Example 2: Find all phones with high-quality display
-PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
 SELECT DISTINCT ?name
 WHERE {{
     ?smartphone onto:name ?name ;
@@ -74,7 +74,7 @@ ORDER BY DESC(?releaseDate)
 LIMIT 5
 
 Example 3: Find phones based on multiple criteria (high-end devices)
-PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
 SELECT DISTINCT ?name
 WHERE {{
     ?smartphone onto:name ?name ;
@@ -94,7 +94,7 @@ ORDER BY DESC(?releaseDate)
 LIMIT 5
 
 Example 4: Compare two phone models
-PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
 SELECT DISTINCT ?name1 ?name2
 WHERE {{
     ?smartphone1 onto:name ?name1 .
@@ -106,7 +106,7 @@ WHERE {{
 LIMIT 1
 
 Example 5: Find phones with excellent camera capabilities
-PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
 SELECT DISTINCT ?name
 WHERE {{
     ?smartphone onto:name ?name ;
@@ -140,8 +140,6 @@ graph = MyRdfGraph(query_endpoint="http://localhost:3030/Semantic/sparql", stand
 graph.load_schema()
 
 
-
-
 class QueryOutput(TypedDict):
     """Generated SQL query."""
     query: Annotated[str, ..., "Syntactically valid SQL query."]
@@ -151,16 +149,17 @@ sparql_select_prompt = PromptTemplate(
     input_variables=["schema", "question"], template=retrieval_qa_chat_prompt
 )
 
+user_question = "Bán cho tôi một chiếc điện thoại giá dưới 10 triệu, có dung lượng lưu trữ lớn và có thể sử dụng 2 sim, dung lượng pin lớn, dùng được lâu"
 
 prompt = sparql_select_prompt.invoke(
     {
         "schema": graph.get_schema,
-        "prompt": "Tôi cần tìm một mẫu điện thoại có dung lượng pin lớn, màn hình lớn và bộ nhớ lưu trữ lớn",
+        "prompt": user_question,
     }
 )
 
 def query_devices_by_names(listDeviceName):
-    query = """PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>
+    query = """PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
     SELECT DISTINCT 
         ?name ?price ?internalMemory ?cardSlot ?colors ?networks 
         ?nfc ?jack3_5 ?sensors ?sim ?waterproof ?weight ?releaseDate
@@ -181,39 +180,43 @@ def query_devices_by_names(listDeviceName):
         ?batteryType ?capacity
 
         # Camera properties (Main)
-        ?mainCameraResolution ?mainCameraType ?mainCameraFeatures 
+        ?mainCameraResolution ?mainCameraFeatures 
         ?mainCameraModule ?mainCameraVideo
 
         # Camera properties (Front)
-        ?frontCameraResolution ?frontCameraType ?frontCameraFeatures 
+        ?frontCameraResolution ?frontCameraFeatures 
         ?frontCameraModule ?frontCameraVideo
 
         # Charger properties
         ?chargerType ?power
+        ?description
 
     WHERE {
         # Required properties
         ?smartphone onto:name ?name ;
             FILTER(?name IN (""" + ", ".join([f'"{name}"' for name in listDeviceName]) + """))
-                
-
+        
         # Group all basic smartphone properties in one OPTIONAL
         OPTIONAL {
             ?smartphone onto:price ?price .
         }
 
+        OPTIONAL {
+            ?smartphone onto:description ?description .
+        }
+
         OPTIONAL { 
-            ?smartphone onto:internalMemory ?internalMemory ;
-                        onto:cardSlot ?cardSlot ;
-                        onto:colors ?colors ;
-                        onto:networks ?networks ;
-                        onto:nfc ?nfc ;
-                        onto:jack3_5 ?jack3_5 ;
-                        onto:sensors ?sensors ;
-                        onto:sim ?sim ;
-                        onto:waterproof ?waterproof ;
-                        onto:weight ?weight ;
-                        onto:releaseDate ?releaseDate .
+    		OPTIONAL { ?smartphone onto:internalMemory ?internalMemory  }
+    		OPTIONAL { ?smartphone onto:cardSlot ?cardSlot  }
+    		OPTIONAL { ?smartphone onto:colors ?colors  }
+    		OPTIONAL { ?smartphone onto:networks ?networks  }
+    		OPTIONAL { ?smartphone onto:nfc ?nfc  }
+    		OPTIONAL { ?smartphone onto:jack3_5 ?jack3_5  }
+    		OPTIONAL { ?smartphone onto:sensors ?sensors  }
+    		OPTIONAL { ?smartphone onto:sim ?sim  }
+    		OPTIONAL { ?smartphone onto:waterproof ?waterproof  }
+    		OPTIONAL { ?smartphone onto:weight ?weight  }
+    		OPTIONAL { ?smartphone onto:releaseDate ?releaseDate  }
         }
 
         OPTIONAL {
@@ -223,50 +226,55 @@ def query_devices_by_names(listDeviceName):
                     onto:foundedDate ?foundedDate .
         }
 
+        OPTIONAL {
+            ?smartphone onto:hasOS ?os .
+            ?os  onto:osName ?osName .
+        }
+
         # Group all CPU related properties in one OPTIONAL
         OPTIONAL {
             ?smartphone onto:hasCPU ?cpu .
-            ?cpu onto:cpuName ?cpuName ;
-                onto:core ?core ;
-                onto:process ?process ;
-                onto:gpu ?gpu .
+            ?cpu onto:cpuName ?cpuName .
+            OPTIONAL { ?cpu onto:core ?core }
+            OPTIONAL { ?cpu onto:process ?process }
+            OPTIONAL { ?cpu onto:gpu ?gpu }
         }
 
         # Group all screen related properties in one OPTIONAL
         OPTIONAL {
             ?smartphone onto:hasScreen ?screen .
-            ?screen onto:type ?screenType ;
-                    onto:size ?size ;
-                    onto:resolution ?resolution ;
-                    onto:refreshRate ?refreshRate ;
-                    onto:brightness ?brightness .
+            OPTIONAL { ?screen onto:type ?screenType  }
+            OPTIONAL { ?screen onto:size ?size  }
+            OPTIONAL { ?screen onto:resolution ?resolution  }
+            OPTIONAL { ?screen onto:refreshRate ?refreshRate  }
+            OPTIONAL { ?screen onto:brightness ?brightness  }
         }
 
         # Group all battery related properties in one OPTIONAL
         OPTIONAL {
             ?smartphone onto:hasBattery ?battery .
-            ?battery onto:batteryType ?batteryType ;
-                    onto:capacity ?capacity .
+            OPTIONAL { ?battery onto:batteryType ?batteryType  }
+            OPTIONAL { ?battery onto:capacity ?capacity  }
         }
 
         # Group all main camera properties in one OPTIONAL
         OPTIONAL {
             ?smartphone onto:hasCamera ?mainCamera .
-            ?mainCamera onto:cameraType "main_camera" ;
-                        onto:cameraResolution ?mainCameraResolution ;
-                        onto:features ?mainCameraFeatures ;
-                        onto:module ?mainCameraModule ;
-                        onto:video ?mainCameraVideo .
+            ?mainCamera onto:cameraType "main_camera" .
+            OPTIONAL { ?mainCamera onto:cameraResolution ?mainCameraResolution  }
+            OPTIONAL { ?mainCamera onto:features ?mainCameraFeatures  }
+            OPTIONAL { ?mainCamera onto:module ?mainCameraModule  }
+            OPTIONAL { ?mainCamera onto:video ?mainCameraVideo  }
         }
 
         # Group all front camera properties in one OPTIONAL
         OPTIONAL {
             ?smartphone onto:hasCamera ?frontCamera .
-            ?frontCamera onto:cameraType "selfie_camera" ;
-                        onto:cameraResolution ?frontCameraResolution ;
-                        onto:features ?frontCameraFeatures ;
-                        onto:module ?frontCameraModule ;
-                        onto:video ?frontCameraVideo .
+            ?frontCamera onto:cameraType "selfie_camera" .
+            OPTIONAL { ?frontCamera onto:cameraResolution ?frontCameraResolution  }
+            OPTIONAL { ?frontCamera onto:features ?frontCameraFeatures  }
+            OPTIONAL { ?frontCamera onto:module ?frontCameraModule  }
+            OPTIONAL { ?frontCamera onto:video ?frontCameraVideo  }
         }
 
         # Group all charger properties in one OPTIONAL
@@ -276,6 +284,7 @@ def query_devices_by_names(listDeviceName):
                     onto:power ?power .
         }
     }
+    ORDER BY DESC(?price)
     LIMIT 5
     """
     return executeQuery(query=query)
@@ -283,12 +292,12 @@ def query_devices_by_names(listDeviceName):
 # Sử dụng hàm
 
 
-# llm = init_chat_model("gpt-4o-mini", model_provider="openai", api_key=api_key, temperature=0)
-# structured_llm = llm.with_structured_output(QueryOutput)
-# result = structured_llm.invoke(prompt)
-result = {
-  "query": "PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices#>\nSELECT DISTINCT ?name\nWHERE {\n    ?smartphone onto:name ?name ;\n                onto:releaseDate ?releaseDate ;\n                onto:hasBattery ?battery ;\n           onto:hasScreen ?screen ;\n                onto:internalMemory ?internalMemory .\n    ?battery onto:capacity ?batteryCapacity .\n    ?screen onto:size ?screenSize .\n\n    FILTER(?batteryCapacity >= 4000)  \n    FILTER(?screenSize >= 6.5)  \n    FILTER(CONTAINS(?internalMemory, \"128GB\") || CONTAINS(?internalMemory, \"256GB\") || CONTAINS(?internalMemory, \"512GB\"))\n}\nORDER BY DESC(?releaseDate)\nLIMIT 5"
-}
+llm = init_chat_model("gpt-4o-mini", model_provider="openai", api_key=api_key, temperature=0)
+structured_llm = llm.with_structured_output(QueryOutput)
+result = structured_llm.invoke(prompt)
+# result = {
+#   "query": "PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>\nSELECT DISTINCT ?name\nWHERE {\n    ?smartphone onto:name ?name ;\n                onto:releaseDate ?releaseDate ;\n                onto:hasBattery ?battery ;\n           onto:hasScreen ?screen ;\n                onto:internalMemory ?internalMemory .\n    ?battery onto:capacity ?batteryCapacity .\n    ?screen onto:size ?screenSize .\n\n    FILTER(?batteryCapacity >= 4000)  \n    FILTER(?screenSize >= 6.5)  \n    FILTER(CONTAINS(?internalMemory, \"128GB\") || CONTAINS(?internalMemory, \"256GB\") || CONTAINS(?internalMemory, \"512GB\"))\n}\nORDER BY DESC(?releaseDate)\nLIMIT 5"
+# }
 
 query = result["query"]
 query = query.replace('\\n', '\n')
@@ -408,17 +417,32 @@ def format_phone_to_prompt(phone_dict):
             prompt += f"- Chống nước: {phone_dict['waterproof']}\n"
         if 'sensors' in phone_dict:
             prompt += f"- Cảm biến: {phone_dict['sensors']}\n"
-
+    if "description" in phone_dict:
+        prompt += f"Mô tả: {phone_dict['description']}\n"
     return prompt
 try:
     ret = executeQuery(query=query)
     listDeviceName = [r['name']['value'] for r in ret]
     listPhones = query_devices_by_names(listDeviceName)
     result = transform_phone_data(listPhones)
+    list_phone_prompt = ""
     for phone in result:
-        print(format_phone_to_prompt(phone))
-        print("-" * 50)
-    # print(result)
+        list_phone_prompt += format_phone_to_prompt(phone) + "\n"
+        list_phone_prompt += "-" * 50 + "\n"
+
+    response_prompt = f"""
+        Giả sử bạn là một nhân viên tư vấn bán các sản phẩm điện thoại chuyên nghiệp, tôi sẽ cung cấp cho bạn câu hỏi của người dùng và một danh sách sản phẩm điện thoại thông minh.
+        Bạn hãy trả lời câu hỏi của người dùng bằng cách sử dụng thông tin từ danh sách sản phẩm điện thoại thông minh mà tôi đã cung cấp cho bạn.
+        Hãy tư vấn cho họ khoảng 2 mẫu điện thoại dựa trên mô tả sản phẩm, hãy đưa ra ưu điểm của mỗi mẫu và giải thích vì sao nó phù hợp với người dùng.
+
+        Danh sách sản phẩm điện thoại thông minh:
+        {list_phone_prompt}
+
+        Câu hỏi của người dùng: {user_question}
+"""
+    llm = init_chat_model("gpt-4o-mini", model_provider="openai", api_key=api_key, temperature=0.5)
+    result = llm.invoke(response_prompt)
+    print(result)
 except Exception as e:
     print(e)
 
