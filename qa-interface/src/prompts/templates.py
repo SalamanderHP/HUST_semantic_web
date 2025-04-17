@@ -8,7 +8,7 @@ are not provided.
 Remember the relationships are like Schema:
 {schema}
 
-Use CONTAINS or REGEX for flexible text matching when searching device names.Make sure the name comparison is case-insensitive.
+Use REGEX for flexible text matching when searching device names, devices sensors, device networks.Make sure comparison is case-insensitive.
 
 To retrieve both front and main cameras, use the hasCamera property along with cameraType filtering:
 - Using ?smartphone onto:hasCamera ?frontCamera and ?frontCamera onto:cameraType "selfie_camera"
@@ -20,6 +20,8 @@ When querying for RAM or storage specifications, do not use the name (?name) var
 Note: The camera resolution property stores detailed camera specs as a text string, including resolution, aperture, focal length, and lens type (e.g., "48 MP, f/1.8, 26mm (wide); 13 MP, ...").
 - Therefore, you CANNOT use numeric comparison operators (e.g., >, <) on camera resolution.  
 - To filter for a minimum resolution (e.g., larger than 20MP), use REGEX or CONTAINS on the camera Resolution value instead,
+
+Sensor names should be filtered based on English.
 
 Also, for each URI object such as the operating system (os), CPU, battery, screen, and camera, include relevant descriptive properties by joining their details. Don’t just return the URI.
 
@@ -109,6 +111,25 @@ WHERE {{
     FILTER(REGEX(?mainCameraResolution, "48 MP|50 MP|64 MP|108 MP|200 MP", "i"))
     FILTER(REGEX(?mainCameraFeatures, "OIS|Night mode|HDR|Ultra Wide|Telephoto", "i"))
     FILTER(REGEX(?mainCameraVideo, "4K|8K", "i"))
+}}
+ORDER BY DESC(?releaseDate)
+LIMIT 5
+
+Example 6: I need a phone model under 5 million, with large battery capacity and good photography
+PREFIX onto:<http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/>
+SELECT DISTINCT ?name
+WHERE {{
+    ?smartphone onto:name ?name ;
+                onto:price ?price ;
+                onto:releaseDate ?releaseDate ;
+                onto:hasBattery ?battery ;
+                onto:hasCamera ?mainCamera .
+    ?battery onto:capacity ?capacity .
+    ?mainCamera onto:cameraType "main_camera" ;
+                onto:cameraResolution ?mainCameraResolution .
+    FILTER(?capacity >= 4000)  
+    FILTER(?price < 5000000)  
+    FILTER(REGEX(?mainCameraResolution, "48 MP|50 MP|64 MP|108 MP|200 MP", "i"))
 }}
 ORDER BY DESC(?releaseDate)
 LIMIT 5

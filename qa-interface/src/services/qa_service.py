@@ -67,7 +67,8 @@ class QAService:
                             listDeviceName.append(r[key]['value'])
             
             if not listDeviceName:
-                print("Warning: No device names found in the query result")
+                await socket.send_text(f"Query Results:\nFound 0 devices")
+                await asyncio.sleep(0)
                 return
             
             listPhones = query_devices_by_names(listDeviceName)
