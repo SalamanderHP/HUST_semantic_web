@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "My workflow 2",
   "nodes": [
     {
       "parameters": {
@@ -12,7 +12,7 @@
         -280,
         120
       ],
-      "id": "040ccde4-a332-42e7-a48c-66757d719338",
+      "id": "e37d7386-35e7-4ec3-85d6-5b833cb3342d",
       "name": "Webhook",
       "webhookId": "ff8b4542-3d71-4154-82d8-3f7864ea06c2"
     },
@@ -88,7 +88,7 @@
         0,
         0
       ],
-      "id": "4f2b935f-9dc1-4db2-b7a2-88853c4b1706",
+      "id": "36cca309-7d33-414a-a074-1d2fc1754ecf",
       "name": "HTTP Request"
     },
     {
@@ -102,7 +102,7 @@
         180,
         0
       ],
-      "id": "448e1ee7-bb95-4a9c-9710-a902886251bd",
+      "id": "81d7b0e2-2889-4981-9cf4-aaed365d1946",
       "name": "Filter cellphone data"
     },
     {
@@ -116,7 +116,7 @@
         80,
         220
       ],
-      "id": "63c633b7-5d19-4908-8b60-c95f064a0fb7",
+      "id": "9ddb7999-49f7-4ae3-be88-7931e67a65bf",
       "name": "GSM-quicksearch"
     },
     {
@@ -127,7 +127,7 @@
         420,
         140
       ],
-      "id": "7444f3fc-bb76-4912-bbae-0b1bbe1e7814",
+      "id": "9a27161d-ec34-4fc6-ac21-a6daf3f40803",
       "name": "Merge"
     },
     {
@@ -140,21 +140,8 @@
         600,
         140
       ],
-      "id": "aec03245-d65e-4ff1-87bd-b1b1f5a753fb",
+      "id": "bb10f38b-4716-4e27-a11b-7f0ac81fcbba",
       "name": "Merge cellphone & gsm"
-    },
-    {
-      "parameters": {
-        "jsCode": "let phoneMapped = $input.first().json.phoneMapped;\nlet result = phoneMapped.map(phone => (\n   {\n    \"name\": phone.name,\n    \"gsm_name\": phone.gsm.name\n  }\n));\n\nreturn result;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        820,
-        140
-      ],
-      "id": "4bf5d079-0c5c-456b-9446-5255ae08cfb2",
-      "name": "Create data for get model detail"
     },
     {
       "parameters": {
@@ -165,34 +152,10 @@
       "typeVersion": 1,
       "position": [
         300,
-        520
+        400
       ],
-      "id": "49ba672c-48ec-4a2b-8d31-e733af816d96",
+      "id": "cc76295f-833a-40e3-9892-467a97d1356e",
       "name": "Split Out"
-    },
-    {
-      "parameters": {
-        "mode": "combine",
-        "advanced": true,
-        "mergeByFields": {
-          "values": [
-            {
-              "field1": "name",
-              "field2": "name"
-            }
-          ]
-        },
-        "joinMode": "enrichInput1",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3,
-      "position": [
-        540,
-        500
-      ],
-      "id": "ebeca892-1794-4638-a8d5-f7dcf8298605",
-      "name": "Merge1"
     },
     {
       "parameters": {
@@ -201,10 +164,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        820,
-        500
+        560,
+        400
       ],
-      "id": "892b11a8-3a16-4982-ac38-21021c3a9499",
+      "id": "455840a4-3579-4c92-80ef-e296e698125a",
       "name": "Trigger crawl & extract data"
     }
   ],
@@ -274,11 +237,6 @@
       "main": [
         [
           {
-            "node": "Create data for get model detail",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Split Out",
             "type": "main",
             "index": 0
@@ -286,29 +244,7 @@
         ]
       ]
     },
-    "Create data for get model detail": {
-      "main": [
-        [
-          {
-            "node": "Merge1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Split Out": {
-      "main": [
-        [
-          {
-            "node": "Merge1",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "Merge1": {
       "main": [
         [
           {
@@ -324,10 +260,10 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1679a922-7733-4e42-a1b9-7301861c67e9",
+  "versionId": "d3ba4407-b229-4343-a227-d2188e196ad4",
   "meta": {
-    "instanceId": "515928a3cedeb4b11e8eb24bba62e924875f0109a01577fe316934a7868b7611"
+    "instanceId": "0a6bac9e0593718bbecdf312a8a9e8857993143c8a2ab5e086191f2c4360da64"
   },
-  "id": "YBWNS23WCBJA1oKd",
+  "id": "bSW1F5oOdYSsc2Sv",
   "tags": []
 }
