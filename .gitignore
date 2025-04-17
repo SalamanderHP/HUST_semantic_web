@@ -173,6 +173,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 gsm_cache
-batch_result.json
-final_result.json
-openai_batch_requests.jsonl
+# batch_result.json
+# final_result.json
+# openai_batch_requests.jsonl
