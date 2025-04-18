@@ -10,6 +10,9 @@ def format_phone_to_prompt(phone_dict):
     if 'price' in phone_dict:
         price = "{:,}".format(int(phone_dict['price'])) + " VNĐ"
         prompt += f"Giá bán: {price}\n"
+
+    if 'releaseDate' in phone_dict:
+        prompt += f"Thời gian giới thiệu: {phone_dict['releaseDate']}\n"
     
     if 'internalMemory' in phone_dict:
         prompt += f"Bộ nhớ: {phone_dict['internalMemory']}\n"
