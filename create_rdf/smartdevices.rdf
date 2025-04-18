@@ -654,25 +654,25 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/c">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/rate">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/gpuValue">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/p">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/date">
+    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/b">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/s">
+    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/cap">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen_size">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/date">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/w">
@@ -689,8 +689,8 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                 <rdf:first>
                     <rdf:Description>
                         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/Battery"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d"/>
+                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/SmartPhone"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/p"/>
                     </rdf:Description>
                 </rdf:first>
                 <rdf:rest>
@@ -698,10 +698,10 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
                         <rdf:first>
                             <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/capacity"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d"/>
-                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/c"/>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/hasBattery"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/p"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/b"/>
                             </rdf:Description>
                         </rdf:first>
                         <rdf:rest>
@@ -709,24 +709,49 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
                                 <rdf:first>
                                     <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
-                                        <swrl:arguments>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                <rdf:first rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/c"/>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4500</rdf:first>
-                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </swrl:arguments>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#ClassAtom"/>
+                                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/Battery"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/b"/>
                                     </rdf:Description>
                                 </rdf:first>
-                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/capacity"/>
+                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/b"/>
+                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/cap"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
+                                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
+                                                        <swrl:arguments>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                <rdf:first rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/cap"/>
+                                                                <rdf:rest>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4500</rdf:first>
+                                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                    </rdf:Description>
+                                                                </rdf:rest>
+                                                            </rdf:Description>
+                                                        </swrl:arguments>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
                             </rdf:Description>
                         </rdf:rest>
                     </rdf:Description>
@@ -737,8 +762,8 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
     </rdf:Description>
     <rdf:Description>
         <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment>High performance device based on refresh rate</rdfs:comment>
-        <rdfs:label>HighPerformanceDevice</rdfs:label>
+        <rdfs:comment>screen size</rdfs:comment>
+        <rdfs:label>LargeScreenSize</rdfs:label>
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
         <swrl:body>
             <rdf:Description>
@@ -755,10 +780,10 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
                         <rdf:first>
                             <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/refreshRate"/>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/hasScreen"/>
                                 <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d"/>
-                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/rate"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen"/>
                             </rdf:Description>
                         </rdf:first>
                         <rdf:rest>
@@ -766,21 +791,9 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
                                 <rdf:first>
                                     <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
-                                        <swrl:arguments>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                <rdf:first rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/rate"/>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">90</rdf:first>
-                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </swrl:arguments>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#ClassAtom"/>
+                                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/Screen"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen"/>
                                     </rdf:Description>
                                 </rdf:first>
                                 <rdf:rest>
@@ -789,12 +802,36 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                                         <rdf:first>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/gpu"/>
-                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d"/>
-                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/gpuValue"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/size"/>
+                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen"/>
+                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen_size"/>
                                             </rdf:Description>
                                         </rdf:first>
-                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
+                                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
+                                                        <swrl:arguments>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                <rdf:first rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/screen_size"/>
+                                                                <rdf:rest>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">6.5</rdf:first>
+                                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                    </rdf:Description>
+                                                                </rdf:rest>
+                                                            </rdf:Description>
+                                                        </swrl:arguments>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                            </rdf:Description>
+                                        </rdf:rest>
                                     </rdf:Description>
                                 </rdf:rest>
                             </rdf:Description>
@@ -845,7 +882,7 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                                                 <rdf:rest>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">900</rdf:first>
+                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10000000</rdf:first>
                                                         <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                                                     </rdf:Description>
                                                 </rdf:rest>
@@ -902,64 +939,7 @@ For example: 48 MP, f/1.8, 26mm (wide); 13 MP, f/2.4, 52mm (telephoto); 8 MP, f/
                                                 <rdf:rest>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-01-01</rdf:first>
-                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </swrl:arguments>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment>screen size</rdfs:comment>
-        <rdfs:label>LargeScreenSize</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/SmartPhone"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/size"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/d"/>
-                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/s"/>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
-                                        <swrl:arguments>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                <rdf:first rdf:resource="http://www.semanticweb.org/admin/ontologies/2025/2/smartdevices/s"/>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">6.5</rdf:first>
+                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-01-01T00:00:00</rdf:first>
                                                         <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                                                     </rdf:Description>
                                                 </rdf:rest>
